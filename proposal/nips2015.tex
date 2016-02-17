@@ -1,0 +1,61 @@
+\documentclass{article} % For LaTeX2e
+\usepackage{nips15submit_e,times}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage[sort,compress]{natbib} % flexible bibliography support
+
+
+\title{Project Proposal: \\Clustered Variance Reduction For Neural Nets}
+
+
+\author{
+Adithya Sagar\\
+\And
+Yang Yuan  \\
+Department of Computer Science\\
+yy528@cornell.edu
+}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\nipsfinalcopy % Uncomment for camera-ready version
+
+\begin{document}
+
+
+\maketitle
+
+
+\section{Proposal}
+Nowadays, deep learning becomes the dominating technique for solving various machine learning problems in practice, including object recognition, speech recognition, auto driving, machine translation, etc. 
+However, one of the major complaints about neural networks is still its slow training time. While people tried to use distributed machines with powerful GPUs to train very deep neural nets in parallel, the essential underlying training algorithms are just a few from the optimization community: stochastic gradient descent, or SGD with auto tuning step size (e.g, AdaGrad and RMSProp), or adaptation of Nesterov's acceleration algorithm to the neural nets (e.g., Momentum and Adam). It 
+will be beneficial to explore new and faster algorithms to neural nets, and make everyone's life of training neural nets easier. 
+
+Recently, a new type of algorithms called variance reduction (VR) methods have been proposed, 
+\cite{JohnsonZhang2013-SVRG,Shalev-Shwartz2013-SDCA,Schmidt2013-SAG,Shalev-ShwartzZhang2014-ProxSDCA,XiaoZhang2014-ProximalSVRG,Defazio2014-Finito,Defazio2014-SAGA,Mairal2015-MISO,UniVR, exploitingstructure},
+which greatly improved the convergence rate of the vanilla SGD by reducing the variance of each stochastic gradient during the training. 
+The basic idea of variance reduction is to store some previous stochastic gradient information, and then use that to be adjustment for the current stochastic gradient, which helps reduce the variance.
+However, most of the papers are only considering convex or even strongly convex objectives, in which the proposed algorithms have strong theoretical guarantee. Several papers consider the case of a convex objective function that can be written as the sum of non-convex sub-functions (\cite{Shalev-Shwartz2015-SDCAwithoutDual,UniVR}), which can be seen a slight relaxation of convex objective, but still the condition is not weaker enough to provide any meaningful insights for highly non-convex objectives like neural nets. There was just one paper which presented some preliminary results on feed-forward neural nets \cite{JohnsonZhang2013-SVRG}, and it would be interesting to see how VR methods performs on other neural nets like convolutional neural nets or recurrent neural nets.
+
+Moreover, there is a particularly interesting direction of VR methods~\cite{exploitingstructure,HLM2015}, which takes the internal structure of the data set into consideration. More specifically, if the data set has nice clustering structure, ClusterSVRG and ClusterACDM~\cite{exploitingstructure} will be much faster than their counterparts SVRG and ACDM, where the speed up factor depends on the quality of the structure. 
+On the other hand, 
+the required clustering on the data set can be raw and can contain a few outliers, and can be computed very efficiently in just one pass of the data, using standard nearest neighbor algorithm like LSH. 
+
+This idea could be particularly interesting for deep learning applications, since it is common practice to create augment data set using trivial transformation or adding small perturbation on the existing training data, in order to get better training results. Based on the definition of clustering structure~\cite{exploitingstructure}, most of the augmented data points can be seen a inside the same cluster as the original data point, which shows clear advantage of the newly proposed algorithms. Moreover, even without the augment data set, it is natural to assume good clustering structure inside the original data set. For example, one person's face seen from slightly different angles can be treated as from the same cluster, and certain animals from the same category could form one cluster as well. 
+
+
+We would like to try to apply VR methods or clustered VR method to explore how neural nets will benefit from that. We are planning to try different scenarios, like feed-forward neural nets, convolutional neural nets, and also recurrent neural nets, with different structure design, and different type of data set. The final outcome of this project will be a detailed analysis and comparison of the performance of clustered VR method in different scenarios. We will investigate different dimensions of performance including convergence of objective function and training error, training time, etc. 
+
+One issue that we have in mind is that since variance reduction method reduces the variance of the stochastic gradient, it might be more susceptible to stuck at saddle points. According to \cite{escapesaddle}, one could add a uniform noise in first-order optimization methods for escaping non-degenerate saddle points. We will also try this idea if necessary.
+
+Adi: you can add something more of surrogate functions.
+
+\bibliographystyle{plain}
+\bibliography{ml}
+\end{document}
