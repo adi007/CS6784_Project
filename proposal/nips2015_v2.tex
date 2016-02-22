@@ -14,6 +14,7 @@ Department of Computational Biology\\
 gmd87@cornell.edu
 \And
 Adithya Sagar\\
+Computational Science and Engineering\\
 asg242@cornell.edu
 \And
 Yang Yuan  \\
@@ -75,7 +76,7 @@ In addition, VR methods have exploited ~\cite{exploitingstructure,HLM2015} the i
 %Yang: we should use some clustering algorithm to get the cluster information of the data, for example, LSH. We need to mention that clustering process, as the preprocess step, is fast; otherwise it's non-sense to use the clustering idea..
 Moreover, the required clustering on the data set can be raw and can contain a few outliers, and can be computed very efficiently in just one pass of the data, using standard nearest neighbor algorithm like LSH. 
 
-However, VR has almost exclusively only been applied to convex objectives of various forms. Only recently has Johnson et al. begun to use VR to train feed-forward neural networks \cite{JohnsonZhang2013-SVRG} leaving the field wide open for the study of VR in CNNs or RNNs.
+However, VR has almost exclusively only been applied to convex objectives of various forms. Only recently has Johnson et al. begun to use VR to train feed-forward neural networks \cite{JohnsonZhang2013-SVRG} leaving the field wide open for the study of VR in CNNs or RNNs. Based on the success of VR based optimization, we also intend to explore the use of surrogate loss functions along with VR based optimization. In cases where objective function evaluation is expensive or computing gradients is infeasible or expensive, surrogate methods like stochastic response surface method (SRS) and its derivatives \cite{regis-2007} have been effective in finding globally optimal solutions or solutions close to global optima that can be found using gradient based optimization.
 
 % However, most of the papers have considered convex or even strongly convex objectives, in which the proposed algorithms have strong theoretical guarantee. Several papers consider the case of a convex objective function that can be written as the sum of non-convex sub-functions (\cite{Shalev-Shwartz2015-SDCAwithoutDual,UniVR}), that can be seen a slight relaxation of convex objective. However this condition is not weak enough to provide any meaningful insights for highly non-convex objectives like neural nets. Recent work by Johnson et al.  \cite{JohnsonZhang2013-SVRG} presented a few preliminary results using this technique on feed-forward neural networks, where SVRG is better than SGD with best tuned step size in terms of test error and loss function for MNIST and CIFAR10. However, they have not presented an adequate discussion on other neural network architectures like convolutional neural networks (CNNs) or recurrent neural networks (RNNs). Thus it will make an interesting study to quantify the performance of VR based optimization method on different neural network architectures. 
 
@@ -89,7 +90,7 @@ However, VR has almost exclusively only been applied to convex objectives of var
 Since we are experimenting with new training methods for neural networks, we will start by ``varying the algorithm while holding the data constant.'' MNIST, CIFAR-10 and CIFAR-100 are the best way for us to prove the exceptional performance of VR training. Ideally, we would like to move beyond these canonical datasets to clinical datasets like MIMIC III \cite{mimiciii} datasets related to traumatic coagulopathy.
 
 \subsection{Evaluation}
-Fortunately, neural network training performance is a well-defined problem and is relatively straight-forward to evaluate in terms of number of epochs, training error and test error. We can use these metrics to evaluate VR optimization algorithms compared with the current state of the art in neural network training.
+Fortunately, neural network training performance is a well-defined problem and is relatively straight-forward to evaluate in terms of number of epochs, training error and test error. We can use these metrics to evaluate VR optimization algorithms compared with the current state of the art in neural network training. We will be analyzing the reduction in variance per layer versus the reduction in error and the number of epochs to understand the success or failure of the algorithm.
 
 %Adi: you can add something more of surrogate functions.
 %^^ I added a little bit about surrogates in the approach section
