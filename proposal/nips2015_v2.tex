@@ -9,6 +9,10 @@
 
 
 \author{
+Gideon Dresdner\\
+Department of Computational Biology\\
+gmd87@cornell.edu
+\And
 Adithya Sagar\\
 asg242@cornell.edu
 \And
@@ -40,16 +44,18 @@ yy528@cornell.edu
 
 \section{Proposal}
 \subsection{Motivation}
-Deep learning is now becoming a widely prevalent technique for solving various machine learning problems that include object recognition, speech recognition, auto driving, machine translation, etc. 
-However, one of the major impediments about neural networks is their slow training time. Though certain degree of success has been achieved through the use of distributed machines with powerful GPUs to train deep neural nets, the the underlying training algorithms have only been few. They primarily include stochastic gradient descent (SGD), or SGD with auto tuning step size (e.g, AdaGrad and RMSProp), or adaptation of Nesterov's acceleration algorithm to the neural nets (e.g., Momentum and Adam). %Do we need more examples? Yang: I don't know others :(
+Deep learning is becoming a widely prevalent technique for solving various machine learning problems such as object recognition, speech recognition, automobile driving and machine translation. 
+Though slow training time continues to be a major impediment to using neural network models,
+%Though many successes have been achieved by leveraging the power of large distributed systems equipped with GPUs to train deep neural nets, there have been few advances in the training algorithms that underpin neural network models. These training algorithms are primarily either stochastic gradient descent (SGD), SGD with auto tuning step size (e.g, AdaGrad and RMSProp) or adaptations of Nesterov's acceleration algorithm to the neural nets (e.g., Momentum and Adam). %Do we need more examples? Yang: I don't know others :(
 %@yang - you could correct me here 
-These algorithms are only a subset of what has been used by the optimization community. Thus training Deep Nets faster is a significant challenge which probably could be addressed by considering novel algorithms that have been developed in the area of optimization.  
-
-%Yang: I think introduction of VR methods should be counted as motivation
-Recently, a new category of algorithms called variance reduction (VR) methods have been proposed, \cite{JohnsonZhang2013-SVRG,Shalev-Shwartz2013-SDCA,Schmidt2013-SAG,Shalev-ShwartzZhang2014-ProxSDCA,XiaoZhang2014-ProximalSVRG,Defazio2014-Finito,Defazio2014-SAGA,Mairal2015-MISO,UniVR, exploitingstructure}, which greatly improved the convergence rate of the vanilla SGD by reducing the variance of each stochastic gradient
+surprisingly few algorithmic developments made in the optimization community have been applied to neural networks. Thus there is an opportunity to bring novel algorithms from the optimization community to deep neural networks.
+Variance reduction (VR) is one such category of algorithms from the optimization community.
+These techniques greatly improve the convergence rate of vanilla SGD by reducing the variance of the stochastic gradients computed during training. \cite{JohnsonZhang2013-SVRG,Shalev-Shwartz2013-SDCA,Schmidt2013-SAG,Shalev-ShwartzZhang2014-ProxSDCA,XiaoZhang2014-ProximalSVRG,Defazio2014-Finito,Defazio2014-SAGA,Mairal2015-MISO,UniVR, exploitingstructure}.
+%The basic idea of variance reduction is to store stochastic gradient information from a previous iteration in order to reduce the variance of some future iterations.
 %Yang: I think here "each" is OK, since indeed every stochastic gradient has reduced variance after adjustment
-during the training. The basic idea of variance reduction is to store some previous stochastic gradient information, and then use that to be adjustment for the current stochastic gradient, which helps reduce the variance.
-However, most of the papers have considered convex or even strongly convex objectives, in which the proposed algorithms have strong theoretical guarantee. Several papers consider the case of a convex objective function that can be written as the sum of non-convex sub-functions (\cite{Shalev-Shwartz2015-SDCAwithoutDual,UniVR}), that can be seen a slight relaxation of convex objective. However this condition is not weak enough to provide any meaningful insights for highly non-convex objectives like neural nets. Recent work by Johnson et al.  \cite{JohnsonZhang2013-SVRG} presented a few preliminary results using this technique on feed-forward neural networks, where SVRG is better than SGD with best tuned step size in terms of test error and loss function for MNIST and CIFAR10. However, they have not presented an adequate discussion on other neural network architectures like convolutional neural networks (CNNs) or recurrent neural networks (RNNs). Thus it will make an interesting study to quantify the performance of VR based optimization method on different neural network architectures. 
+%Yang: I think introduction of VR methods should be counted as motivation
+
+% However, most of the papers have considered convex or even strongly convex objectives, in which the proposed algorithms have strong theoretical guarantee. Several papers consider the case of a convex objective function that can be written as the sum of non-convex sub-functions (\cite{Shalev-Shwartz2015-SDCAwithoutDual,UniVR}), that can be seen a slight relaxation of convex objective. However this condition is not weak enough to provide any meaningful insights for highly non-convex objectives like neural nets. Recent work by Johnson et al.  \cite{JohnsonZhang2013-SVRG} presented a few preliminary results using this technique on feed-forward neural networks, where SVRG is better than SGD with best tuned step size in terms of test error and loss function for MNIST and CIFAR10. However, they have not presented an adequate discussion on other neural network architectures like convolutional neural networks (CNNs) or recurrent neural networks (RNNs). Thus it will make an interesting study to quantify the performance of VR based optimization method on different neural network architectures. 
 
 \subsection{Approach}
 
@@ -61,7 +67,7 @@ However, most of the papers have considered convex or even strongly convex objec
 \newcommand{\li}{\mathsf{li}}
 \newcommand{\cH}{H_{\mathsf{cl}}}
 
-Recall that in a stochastic gradient method one usually defines a gradient estimator $\tnabla^t$ at iteration $t$, and performs an update $x^{t+1} \gets x^t - \eta \tnabla^t$ for some step size $\eta>0$.
+The basic idea of variance reduction is to store stochastic gradient information from a previous iteration in order to reduce the variance of some future iterations. Recall that in a stochastic gradient method one usually defines a gradient estimator $\tnabla^t$ at iteration $t$, and performs an update $x^{t+1} \gets x^t - \eta \tnabla^t$ for some step size $\eta>0$.
 The key idea behind most VR methods is to carefully define an estimator $\tnabla^t$ with diminishing variance. For instance, SVRG chooses $\tnabla^t = \frac{1}{n} \sum_j \nabla f_j(\tx) + \nabla f_i(x^t) - \nabla f_i(\tx)$ where $\tx$ is a \emph{snapshot} iterate that can be $n$ iterations ago.
 
 In addition, VR methods have exploited ~\cite{exploitingstructure,HLM2015} the internal structure of the data using different clustering techniques like ClusterSVRG and ClusterACDM~\cite{exploitingstructure}, to enhance the speed of optimization. Cluster dependent VRs will be much faster than their vanilla version (SVRG and ACDM), based on the quality of the structure.   
@@ -69,22 +75,24 @@ In addition, VR methods have exploited ~\cite{exploitingstructure,HLM2015} the i
 %Yang: we should use some clustering algorithm to get the cluster information of the data, for example, LSH. We need to mention that clustering process, as the preprocess step, is fast; otherwise it's non-sense to use the clustering idea..
 Moreover, the required clustering on the data set can be raw and can contain a few outliers, and can be computed very efficiently in just one pass of the data, using standard nearest neighbor algorithm like LSH. 
 
-This idea could be particularly interesting for deep learning applications, since it is common practice to create augment data set using trivial transformation or adding small perturbation on the existing training data, in order to get better training results. Based on the definition of clustering structure~\cite{exploitingstructure}, most of the augmented data points can be seen a inside the same cluster as the original data point, which shows clear advantage of the newly proposed algorithms. Moreover, even without the augment data set, it is natural to assume good clustering structure inside the original data set. For example, one person's face seen from slightly different angles can be treated as from the same cluster, and certain animals from the same category could form one cluster as well. 
+However, VR has almost exclusively only been applied to convex objectives of various forms.\cite{Shalev-Shwartz2015-SDCAwithoutDual,UniVR} Only recently has Johnson et al. begun to use VR to train feed-forward neural networks \cite{JohnsonZhang2013-SVRG} leaving the field wide open for the study of VR in CNNs or RNNs.
+
+% However, most of the papers have considered convex or even strongly convex objectives, in which the proposed algorithms have strong theoretical guarantee. Several papers consider the case of a convex objective function that can be written as the sum of non-convex sub-functions (\cite{Shalev-Shwartz2015-SDCAwithoutDual,UniVR}), that can be seen a slight relaxation of convex objective. However this condition is not weak enough to provide any meaningful insights for highly non-convex objectives like neural nets. Recent work by Johnson et al.  \cite{JohnsonZhang2013-SVRG} presented a few preliminary results using this technique on feed-forward neural networks, where SVRG is better than SGD with best tuned step size in terms of test error and loss function for MNIST and CIFAR10. However, they have not presented an adequate discussion on other neural network architectures like convolutional neural networks (CNNs) or recurrent neural networks (RNNs). Thus it will make an interesting study to quantify the performance of VR based optimization method on different neural network architectures. 
+
+% This idea could be particularly interesting for deep learning applications, since it is common practice to create augment data set using trivial transformation or adding small perturbation on the existing training data, in order to get better training results. Based on the definition of clustering structure~\cite{exploitingstructure}, most of the augmented data points can be seen a inside the same cluster as the original data point, which shows clear advantage of the newly proposed algorithms. Moreover, even without the augment data set, it is natural to assume good clustering structure inside the original data set. For example, one person's face seen from slightly different angles can be treated as from the same cluster, and certain animals from the same category could form one cluster as well. 
 
 
 %Yang: maybe below is a minor point and we don't really need to mention it..
 %One issue that we have in mind is that since variance reduction method reduces the variance of the stochastic gradient, it might be more susceptible to stuck at saddle points. According to \cite{escapesaddle}, one could add a uniform noise in first-order optimization methods for escaping non-degenerate saddle points. We will also try this idea if necessary.
 
 \subsection{Data}
-We will first try small data sets like MNIST, CIFAR10, CIFAR100. Since several SGD based optimization algorithms  have traditionally used these data sets, it will be interesting to compare the performance of our approach on these data sets. In the event that we are performing well on these data sets we will attempt to use them on larger more complex data sets like MIMIC III \cite{mimiciii} and data sets that describe traumatic coagulopathy.
+Since we are experimenting with new training methods for neural networks, we will start by ``varying the algorithm while holding the data constant.'' MNIST, CIFAR-10 and CIFAR-100 are the best way for us to prove the exceptional performance of VR training. Ideally, we would like to move beyond these canonical datasets to clinical datasets like MIMIC III \cite{mimiciii} datasets related to traumatic coagulopathy.
 
 \subsection{Evaluation}
-We would like to try to apply VR methods or cluster based VR method to explore how neural nets will benefit from that. We are planning to try different neural nets, like feed-forward neural nets, convolutional neural nets, and also recurrent neural nets, with different structure designs, and different types of data set. The final outcome of this project will be a detailed analysis and comparison of the performance of cluster based VR method in different scenarios. We will investigate different dimensions of performance including convergence of objective function and training error, training time, etc. 
-
+Fortunately, neural network training performance is a well-defined problem and is relatively straight-forward to evaluate in terms of number of epochs, training error and test error. We can use these metrics to evaluate VR optimization algorithms compared with the current state of the art in neural network training.
 
 %Adi: you can add something more of surrogate functions.
 %^^ I added a little bit about surrogates in the approach section
-
 
 \bibliographystyle{plain}
 \bibliography{ml}
