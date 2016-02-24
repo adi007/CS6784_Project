@@ -7,7 +7,6 @@
 
 \title{Project Proposal: \\Cluster Based Variance Reduction For Neural Nets}
 
-
 \author{
 Gideon Dresdner\\
 Department of Computational Biology\\
@@ -34,7 +33,6 @@ yy528@cornell.edu
 
 \begin{document}
 
-
 \maketitle
 
 % The following sections should be in the whitepaper
@@ -42,6 +40,10 @@ yy528@cornell.edu
 %b) approach: roughly what will be your approach (what will you do if this doesn?t work?)
 %c) data: where does your data come from? Why is it the right data for this problem?
 %d) evaluation: what experiments are you planning on evaluating your research / hypothesis.
+
+\begin{abstract}
+Accelerating the training of deep neural networks continues to be a challenging problem. To address this challenge we propose a recently developed technique for convex optimization called variance reduction (VR) for training deep neural networks. The basic idea of variance reduction is to store stochastic gradient information from a previous iteration in order to reduce the variance for future iterations. It has been shown through rigorous mathematics and experiments that VR accelerates performance in the convex case. We propose to modify VR to accelerate training on neural networks thereby assessing the performance of VR in a non-convex optimization scenario.  We also intend to study VR performance in conjunction with preprocessed clustering and surrogate loss functions.
+\end{abstract}
 
 \section{Proposal}
 \subsection{Motivation}
